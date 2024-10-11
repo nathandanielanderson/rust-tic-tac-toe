@@ -1,7 +1,8 @@
-use std::io;
+//use std::io;
 
 
 fn set_state(board: &mut [u8], index: usize, state: u8) {
+
     // Calculate which u8 holds the desired 2-bit state
     let byte_index = index / 4;
     let bit_offset = (index % 4) * 2;
@@ -12,6 +13,16 @@ fn set_state(board: &mut [u8], index: usize, state: u8) {
 
 }
 
+fn get_state(board: &[u8], index: usize) -> u8 {
+
+    // Calculate which u8 holds the desired 2-bit state
+    let byte_index = index / 4;
+    let bit_offset = (index % 4) * 2;
+
+    // Clear the existing 2-bit region and set new state
+    (board[byte_index] >> bit_offset) & 0b11 //returns this 2bit value
+
+}
 
 fn main() {
 
@@ -20,11 +31,20 @@ fn main() {
     // A 3x3 board needs 9 2bit cells, 9 * 2 = 18, this requires 3 u8 values.
     let mut board = [0u8; 3]; // Each u8 can store 4 cells (2bits per cell)
 
-    println!("Before: {:?}", board);
-
+    // Retrieve BEFORE states
+    println!("Initial States");
+    println!("Cell 0: {}", get_state(&board, 0)); // Outputs 2bit state at given index
+    println!("Cell 0: {}", get_state(&board, 1)); 
+    println!("Cell 0: {}", get_state(&board, 2));
+    
     set_state(&mut board, 0, 2);
     set_state(&mut board, 1, 1);
     set_state(&mut board, 2, 0);
 
-    println!("After: {:?}", board);
+    // Retrieve AFTER states
+    println!("Final States");
+    println!("Cell 0: {}", get_state(&board, 0)); // Outputs 2bit state at given index
+    println!("Cell 0: {}", get_state(&board, 1)); 
+    println!("Cell 0: {}", get_state(&board, 2));
+    
 }
