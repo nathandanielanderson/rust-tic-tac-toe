@@ -141,8 +141,28 @@ fn pause_for_enter() {
     io::stdin().read_line(&mut input).expect("Failed to read line");
 }
 
+fn minimax() {
+ //minimax algorithm
+}
+
 fn find_best_move() {
-    //AI fucntionality
+    let mut best_move = 0;
+    let mut best_score = -100;
+
+    for i in 0..9 {
+        if get_state(board, i) == 0 { // If cell is empty
+            set_state(board, i , 2);  // AI makes the move
+            let score = minimax(board, 0, false);
+            set_state(board, i, 0); // Undo move
+
+            if score > best_score {
+                best_score = score;
+                best_move = i;
+            }
+        }
+    }
+
+    return best_move;
 }
 
 fn main() {
