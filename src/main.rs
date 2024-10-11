@@ -72,7 +72,7 @@ fn print_board(board: &[u8]) {
             let state = (byte >> (bit_offset*2)) & 0b11; // Extract 2bit state
             
             match count % 3 {
-               0 => print!(" {} |",to_marker(&state)),
+               0 => print!("     {} |",to_marker(&state)),
                1 => print!(" {} |",to_marker(&state)),
                _ => print!(" {} \n",to_marker(&state)),
             }
@@ -81,10 +81,11 @@ fn print_board(board: &[u8]) {
 
             // Print a line after every 3 states, but not after the last row
             if count % 3 == 0 && count < 9 {
-                println!("---|---|---");
+                println!("    ---|---|---");
             }
 
             if count >= 9 {
+                println!();
                 return; // Stop after 9 states
             }
 
@@ -117,14 +118,15 @@ fn print_instructions() {
     println!("Each player takes turns placing their marker ('x' or 'o').");
     println!();
     
-    println!("Numpad Layout:");
-    println!("  7 | 8 | 9");
-    println!(" ---|---|---");
-    println!("  4 | 5 | 6");
-    println!(" ---|---|---");
-    println!("  1 | 2 | 3");
+    println!("   Numpad Layout:\n");
+    println!("     7 | 8 | 9");
+    println!("    ---|---|---");
+    println!("     4 | 5 | 6");
+    println!("    ---|---|---");
+    println!("     1 | 2 | 3");
 
     println!();
+    pause_for_enter();
 }
 
 fn clear_screen() {
@@ -132,29 +134,34 @@ fn clear_screen() {
     execute!(stdout(), Clear(ClearType::All)).expect("Failed to clear screen");
 }
 
+fn pause_for_enter() {
+    let mut input = String::new();
+    println!("Press [ENTER] to begin...");
+    io::stdout().flush().expect("Failed to flush stdout"); // Make sure the prompt is printed
+    io::stdin().read_line(&mut input).expect("Failed to read line");
+}
+
 fn main() {
     let mut board = [0u8; 3]; // Each u8 can store 4 cells (2 bits per cell)
     let mut current_player = 1; // 1 for "x", 2 for "o"
-
     
+    
+    print_instructions();
 
     loop {
-
         clear_screen();
-        print_instructions();
-        println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         println!();
 
         // Print the updated board
-        println!("Tic Tac Toe");
+        println!("    Tic Tac Toe\n");
         print_board(&board);
         print!("\n");
 
         // Ask for user input
+        let mut input = String::new();
         print!("Player {} ({}), enter a position (1-9): ", current_player, if current_player == 1 { "x" } else { "o" });
         io::stdout().flush().expect("Failed to flush stdout"); // Flush to ensure the prompt prints before reading input
-        
-        let mut input = String::new();
+
         io::stdin().read_line(&mut input).expect("Failed to read line");
 
         // Try to parse input as a number
@@ -178,16 +185,16 @@ fn main() {
         // Check win condition
         if is_winner(&board, current_player) {
             clear_screen();
+            println!("\nPlayer {} ({}) wins!\n", current_player, if current_player == 1 { "x" } else { "o" });
             print_board(&board);
-            println!("\nPlayer {} ({}) wins!", current_player, if current_player == 1 { "x" } else { "o" });
             break; // Exit game loop when player wins
         }
 
         // Check draw condition
         if is_draw(&board) {
             clear_screen();
+            println!("\nIt's a Draw!\n");
             print_board(&board);
-            println!("\nIt's a Draw!");
             break; // Exit game loop when player wins
         }
 
