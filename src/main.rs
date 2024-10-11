@@ -1,5 +1,33 @@
-use std::io::{self, Write};
+use std::io::{self, stdout, Write};
+use crossterm::{execute, terminal::{Clear, ClearType}};
 
+fn is_winner(board: &[u8], player: u8) -> bool {
+    // Define 8 possible win conditions
+    let win_conditions = [
+        [0, 1, 2], // Row  1
+        [3, 4, 5], // Row  2
+        [6, 7, 8], // Row  3
+        [0, 3, 6], // Col  1
+        [1, 4, 7], // Col  2
+        [2, 5, 8], // Col  3
+        [0, 4, 8], // Diag 1
+        [2, 4, 6], // Diag 2
+    ];
+
+    // Check if the player occupies all positions in any win condition
+    for condition in win_conditions.iter() {
+        if condition.iter().all(|&index| get_state(board, index) == player) {
+            return true;
+        }
+    }
+    false
+    
+}
+
+fn is_draw(board: &[u8]) -> bool {
+    // board full? no winner, draw game
+    (0..9).all(|i| get_state(board, i) != 0) && !is_winner(board, 1) && !is_winner(board, 2)
+}
 
 fn set_state(board: &mut [u8], index: usize, state: u8) {
 
@@ -36,7 +64,7 @@ fn print_board(board: &[u8]) {
 
     let mut count = 0;
     
-    for (byte_index, &byte) in board.iter().enumerate() {
+    for (_byte_index, &byte) in board.iter().enumerate() {
 
         // Each u8 contains 4 2-bit states, extract each of them
         for bit_offset in 0..4 {
@@ -99,13 +127,24 @@ fn print_instructions() {
     println!();
 }
 
+fn clear_screen() {
+    // Clear the entire terminal screen
+    execute!(stdout(), Clear(ClearType::All)).expect("Failed to clear screen");
+}
+
 fn main() {
     let mut board = [0u8; 3]; // Each u8 can store 4 cells (2 bits per cell)
     let mut current_player = 1; // 1 for "x", 2 for "o"
 
-    print_instructions();
+    
 
     loop {
+
+        clear_screen();
+        print_instructions();
+        println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        println!();
+
         // Print the updated board
         println!("Tic Tac Toe");
         print_board(&board);
@@ -135,6 +174,22 @@ fn main() {
 
         // Set the state on the board (1 for "x", 2 for "o")
         set_state(&mut board, position, current_player);
+
+        // Check win condition
+        if is_winner(&board, current_player) {
+            clear_screen();
+            print_board(&board);
+            println!("\nPlayer {} ({}) wins!", current_player, if current_player == 1 { "x" } else { "o" });
+            break; // Exit game loop when player wins
+        }
+
+        // Check draw condition
+        if is_draw(&board) {
+            clear_screen();
+            print_board(&board);
+            println!("\nIt's a Draw!");
+            break; // Exit game loop when player wins
+        }
 
         // Switch player for the next turn
         current_player = if current_player == 1 { 2 } else { 1 };
