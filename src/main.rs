@@ -141,6 +141,10 @@ fn pause_for_enter() {
     io::stdin().read_line(&mut input).expect("Failed to read line");
 }
 
+fn find_best_move() {
+    //AI fucntionality
+}
+
 fn main() {
     let mut board = [0u8; 3]; // Each u8 can store 4 cells (2 bits per cell)
     let mut current_player = 1; // 1 for "x", 2 for "o"
@@ -149,38 +153,50 @@ fn main() {
     print_instructions();
 
     loop {
-        clear_screen();
-        println!();
+        if (current_player = 1){ // Human Player's turn
+            clear_screen();
+            println!();
 
-        // Print the updated board
-        println!("    Tic Tac Toe\n");
-        print_board(&board);
-        print!("\n");
+            // Print the updated board
+            println!("    Tic Tac Toe\n");
+            print_board(&board);
+            print!("\n");
 
-        // Ask for user input
-        let mut input = String::new();
-        print!("Player {} ({}), enter a position (1-9): ", current_player, if current_player == 1 { "x" } else { "o" });
-        io::stdout().flush().expect("Failed to flush stdout"); // Flush to ensure the prompt prints before reading input
+            // Ask for user input
+            let mut input = String::new();
+            print!("Player {} ({}), enter a position (1-9): ", current_player, if current_player == 1 { "x" } else { "o" });
+            io::stdout().flush().expect("Failed to flush stdout"); // Flush to ensure the prompt prints before reading input
 
-        io::stdin().read_line(&mut input).expect("Failed to read line");
+            io::stdin().read_line(&mut input).expect("Failed to read line");
 
-        // Try to parse input as a number
-        let position: usize = match input.trim().parse::<usize>().ok().and_then(numpad_to_index) {
-            Some(index) => index,
-            None => {
-                println!("Invalid input. Please enter a number between 1 and 9.");
+            // Try to parse input as a number
+            let position: usize = match input.trim().parse::<usize>().ok().and_then(numpad_to_index) {
+                Some(index) => index,
+                None => {
+                    println!("Invalid input. Please enter a number between 1 and 9.");
+                    continue;
+                }
+            };
+
+            // Check if the cell is already occupied
+            if get_state(&board, position) != 0 {
+                println!("That position is already taken. Please try again.");
                 continue;
             }
-        };
 
-        // Check if the cell is already occupied
-        if get_state(&board, position) != 0 {
-            println!("That position is already taken. Please try again.");
-            continue;
+            // Set the state on the board (1 for "x", 2 for "o")
+            set_state(&mut board, position, current_player);
+
+        }else { // AI's turn
+
+            clear_screen();
+            println!("AI (Player2) is making its move...\n");
+
+            // Find the best move for the AI 
+            let best_move = find_best_move(&mut board);
+            set_state(&mut board, best_move, 2); // Set AI's move on the board
+
         }
-
-        // Set the state on the board (1 for "x", 2 for "o")
-        set_state(&mut board, position, current_player);
 
         // Check win condition
         if is_winner(&board, current_player) {
@@ -200,5 +216,6 @@ fn main() {
 
         // Switch player for the next turn
         current_player = if current_player == 1 { 2 } else { 1 };
+        
     }
 }
