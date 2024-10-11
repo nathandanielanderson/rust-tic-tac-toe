@@ -1,4 +1,4 @@
-//use std::io;
+use std::io;
 
 
 fn set_state(board: &mut [u8], index: usize, state: u8) {
@@ -28,7 +28,7 @@ fn to_marker(state: &u8) -> String{
     match state {
         1 => "x".to_string(),
         2 => "o".to_string(),
-        _ => " ".to_string(),
+        _ => "_".to_string(),
     }
 }
 
@@ -39,13 +39,22 @@ fn print_board(board: &[u8]) {
     for (byte_index, &byte) in board.iter().enumerate() {
 
         // Each u8 contains 4 2-bit states, extract each of them
-        for bit_offset in (0..4).rev() { //rev() reverses loop, so most significant 2bits are extracted first
+        for bit_offset in (0..4) { //rev() reverses loop, so most significant 2bits are extracted first
 
             let state = (byte >> (bit_offset*2)) & 0b11; // Extract 2bit state
-            let overall_index = byte_index * 4 + (3 - bit_offset); // Compute overall index
-            println!("i: {} state: {}", overall_index, to_marker(&state));
+            
+            match count % 3 {
+               0 => print!(" {} |",to_marker(&state)),
+               1 => print!(" {} |",to_marker(&state)),
+               _ => print!(" {} \n",to_marker(&state)),
+            }
 
             count += 1; // Increment counter
+            
+            // Print a line after every 3 states, but not after the last row
+            if count % 3 == 0 && count < 9 {
+                println!("---|---|---");
+            }
 
             if count >= 9 {
                 return; // Stop after 9 states
@@ -67,11 +76,18 @@ fn main() {
     println!("Initial States");
     print_board(&board);
     
-    set_state(&mut board, 0, 2);
-    set_state(&mut board, 1, 1);
-    set_state(&mut board, 2, 0);
+    set_state(&mut board, 0, 1);
+    set_state(&mut board, 1, 2);
+    set_state(&mut board, 2, 1);
+    set_state(&mut board, 3, 2);
+    set_state(&mut board, 4, 1);
+    set_state(&mut board, 5, 2);
+    set_state(&mut board, 6, 1);
+    set_state(&mut board, 7, 2);
+    set_state(&mut board, 8, 1);
 
     println!("Mutated States");
     print_board(&board);
+    print!("\n");
     
 }
