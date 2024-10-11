@@ -80,9 +80,30 @@ fn numpad_to_index(num: usize) -> Option<usize> {
     }
 }
 
+fn print_instructions() {
+    println!("Welcome to Tic Tac Toe!");
+    println!();
+    println!("How to play:");
+    println!("You will be prompted to enter a position on the board.");
+    println!("Use the corresponding numpad keys to make your move.");
+    println!("Each player takes turns placing their marker ('x' or 'o').");
+    println!();
+    
+    println!("Numpad Layout:");
+    println!("  7 | 8 | 9");
+    println!(" ---|---|---");
+    println!("  4 | 5 | 6");
+    println!(" ---|---|---");
+    println!("  1 | 2 | 3");
+
+    println!();
+}
+
 fn main() {
     let mut board = [0u8; 3]; // Each u8 can store 4 cells (2 bits per cell)
     let mut current_player = 1; // 1 for "x", 2 for "o"
+
+    print_instructions();
 
     loop {
         // Print the updated board
