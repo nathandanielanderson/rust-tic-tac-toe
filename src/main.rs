@@ -1,5 +1,7 @@
 use std::io::{self, stdout, Write};
 use crossterm::{execute, terminal::{Clear, ClearType}};
+use std::time::Duration;
+use std::thread::sleep;
 
 fn is_winner(board: &[u8], player: u8) -> bool {
     // Define 8 possible win conditions
@@ -141,11 +143,42 @@ fn pause_for_enter() {
     io::stdin().read_line(&mut input).expect("Failed to read line");
 }
 
-fn minimax() {
- //minimax algorithm
+fn minimax(board: &mut [u8], depth: i32, is_maximizing: bool) -> i32 {
+    if is_winner(board, 2){
+        return 1;  // AI wins
+    } else if is_winner(board, 1) {
+        return -1; // Player Wins
+    } else if is_draw(board) {
+        return 0;  // Draw
+    }
+
+    if is_maximizing {
+        let mut best_score = -100;
+        for i in 0..9 {
+            if get_state(board, i) == 0 { // If the ccell is empty
+                set_state(board, i, 2);   // AI makes the move
+                let score = minimax(board, depth + 1, false);
+                set_state(board, i, 0);   // Undo move
+                best_score = best_score.max(score);
+            }
+        }
+        return best_score;
+    } else {
+        let mut best_score = 100;
+        for i in 0..9 {
+            if get_state(board, i) == 0 { // If the cell is empty
+                set_state(board, i, 1);   // Player makes the move
+                let score = minimax(board, depth + 1, true);
+                set_state(board, i, 0);   // Undo move
+                best_score = best_score.min(score);
+            }
+        }
+        return best_score;
+    }
+
 }
 
-fn find_best_move() {
+fn find_best_move(board: &mut [u8]) -> usize {
     let mut best_move = 0;
     let mut best_score = -100;
 
@@ -173,7 +206,7 @@ fn main() {
     print_instructions();
 
     loop {
-        if (current_player = 1){ // Human Player's turn
+        if (current_player == 1){ // Human Player's turn
             clear_screen();
             println!();
 
