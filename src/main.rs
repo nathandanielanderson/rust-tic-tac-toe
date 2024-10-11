@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Write};
 
 
 fn set_state(board: &mut [u8], index: usize, state: u8) {
@@ -28,7 +28,7 @@ fn to_marker(state: &u8) -> String{
     match state {
         1 => "x".to_string(),
         2 => "o".to_string(),
-        _ => "_".to_string(),
+        _ => " ".to_string(),
     }
 }
 
@@ -39,7 +39,7 @@ fn print_board(board: &[u8]) {
     for (byte_index, &byte) in board.iter().enumerate() {
 
         // Each u8 contains 4 2-bit states, extract each of them
-        for bit_offset in (0..4) { //rev() reverses loop, so most significant 2bits are extracted first
+        for bit_offset in 0..4 {
 
             let state = (byte >> (bit_offset*2)) & 0b11; // Extract 2bit state
             
@@ -50,7 +50,7 @@ fn print_board(board: &[u8]) {
             }
 
             count += 1; // Increment counter
-            
+
             // Print a line after every 3 states, but not after the last row
             if count % 3 == 0 && count < 9 {
                 println!("---|---|---");
@@ -65,29 +65,57 @@ fn print_board(board: &[u8]) {
 
 }
 
+fn numpad_to_index(num: usize) -> Option<usize> {
+    match num {
+        7 => Some(0),
+        8 => Some(1),
+        9 => Some(2),
+        4 => Some(3),
+        5 => Some(4),
+        6 => Some(5),
+        1 => Some(6),
+        2 => Some(7),
+        3 => Some(8),
+        _ => None, // Invalid input
+    }
+}
+
 fn main() {
+    let mut board = [0u8; 3]; // Each u8 can store 4 cells (2 bits per cell)
+    let mut current_player = 1; // 1 for "x", 2 for "o"
 
-    //let mut input = String::new();
+    loop {
+        // Print the updated board
+        println!("Tic Tac Toe");
+        print_board(&board);
+        print!("\n");
 
-    // A 3x3 board needs 9 2bit cells, 9 * 2 = 18, this requires 3 u8 values.
-    let mut board = [0u8; 3]; // Each u8 can store 4 cells (2bits per cell)
+        // Ask for user input
+        print!("Player {} ({}), enter a position (1-9): ", current_player, if current_player == 1 { "x" } else { "o" });
+        io::stdout().flush().expect("Failed to flush stdout"); // Flush to ensure the prompt prints before reading input
+        
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("Failed to read line");
 
-    // Retrieve BEFORE states
-    println!("Initial States");
-    print_board(&board);
-    
-    set_state(&mut board, 0, 1);
-    set_state(&mut board, 1, 2);
-    set_state(&mut board, 2, 1);
-    set_state(&mut board, 3, 2);
-    set_state(&mut board, 4, 1);
-    set_state(&mut board, 5, 2);
-    set_state(&mut board, 6, 1);
-    set_state(&mut board, 7, 2);
-    set_state(&mut board, 8, 1);
+        // Try to parse input as a number
+        let position: usize = match input.trim().parse::<usize>().ok().and_then(numpad_to_index) {
+            Some(index) => index,
+            None => {
+                println!("Invalid input. Please enter a number between 1 and 9.");
+                continue;
+            }
+        };
 
-    println!("Mutated States");
-    print_board(&board);
-    print!("\n");
-    
+        // Check if the cell is already occupied
+        if get_state(&board, position) != 0 {
+            println!("That position is already taken. Please try again.");
+            continue;
+        }
+
+        // Set the state on the board (1 for "x", 2 for "o")
+        set_state(&mut board, position, current_player);
+
+        // Switch player for the next turn
+        current_player = if current_player == 1 { 2 } else { 1 };
+    }
 }
