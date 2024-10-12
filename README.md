@@ -1,5 +1,16 @@
 # Tic-Tac-Toe Game in Rust
 
+## Installation
+
+### Installation & Running the Game
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/nathandanielanderson/rust-tic-tac-toe.git
+   cd rust-tic-tac-toe
+   cargo run
+   ```
+
 Tic Tac Toe
 
 ```
@@ -45,12 +56,4 @@ This project was inspired by the classic movie *WarGames* (1983), where Tic-Tac-
 
 Just like in *WarGames*, the AI in this game is unbeatable when played optimally. It uses a well-known algorithm to ensure it either wins or forces a draw, depending on how well the player performs.
 
-## Installation
 
-### Installation & Running the Game
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/nathandanielanderson/rust-tic-tac-toe.git
-   cd rust-tic-tac-toe
-   cargo run
