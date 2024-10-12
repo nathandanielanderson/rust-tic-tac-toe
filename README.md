@@ -52,8 +52,8 @@ Player 1 (x), enter a position (1-9):
 
 ## Inspiration
 
-This project was inspired by the classic movie *WarGames* (1983), where Tic-Tac-Toe plays a pivotal role in preventing global nuclear war. The movie's exploration of AI, games, and decision-making sparked my interest in programming and led me to write Tic-Tac-Toe whenever learning a new programming language.
+This project was inspired by the classic movie *WarGames* (1983), exploration of AI, games, and decision-making sparked my interest in programming and led me to write Tic-Tac-Toe whenever learning a new programming language.
 
-Just like in *WarGames*, the AI in this game is unbeatable when played optimally. It uses a well-known algorithm to ensure it either wins or forces a draw, depending on how well the player performs.
+Just like in *WarGames*, the AI in this game is unbeatable when played optimally. It uses a well-known maximin algorithm to ensure it either wins or forces a draw, depending on how well the player performs.
 
 
