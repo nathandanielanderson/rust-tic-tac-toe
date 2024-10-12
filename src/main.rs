@@ -206,12 +206,12 @@ fn main() {
     print_instructions();
 
     loop {
-        if (current_player == 1){ // Human Player's turn
+        if current_player == 1 { // Human Player's turn
             clear_screen();
             println!();
 
             // Print the updated board
-            println!("    Tic Tac Toe\n");
+            println!("    Tic Tac Toe\n\n\n");
             print_board(&board);
             print!("\n");
 
@@ -243,7 +243,23 @@ fn main() {
         }else { // AI's turn
 
             clear_screen();
-            println!("AI (Player2) is making its move...\n");
+            println!("    Tic Tac Toe\n");
+            println!("    Thinking.\n");
+            print_board(&board);
+            println!();
+            sleep(Duration::from_millis(300));
+            clear_screen();
+            println!("    Tic Tac Toe\n");
+            println!("    Thinking..\n");
+            print_board(&board);
+            println!();
+            sleep(Duration::from_millis(200));
+            clear_screen();
+            println!("    Tic Tac Toe\n");
+            println!("    Thinking...\n");
+            print_board(&board);
+            println!();
+            sleep(Duration::from_millis(100));
 
             // Find the best move for the AI 
             let best_move = find_best_move(&mut board);
@@ -254,16 +270,18 @@ fn main() {
         // Check win condition
         if is_winner(&board, current_player) {
             clear_screen();
-            println!("\nPlayer {} ({}) wins!\n", current_player, if current_player == 1 { "x" } else { "o" });
+            println!("\n    Player {} ({}) wins!\n", current_player, if current_player == 1 { "x" } else { "AI" });
             print_board(&board);
+            println!();
             break; // Exit game loop when player wins
         }
 
         // Check draw condition
         if is_draw(&board) {
             clear_screen();
-            println!("\nIt's a Draw!\n");
+            println!("\n    It's a Draw!\n");
             print_board(&board);
+            println!();
             break; // Exit game loop when player wins
         }
 
