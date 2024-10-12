@@ -213,7 +213,7 @@ fn main() {
             // Print the updated board
             println!("    Tic Tac Toe\n\n\n");
             print_board(&board);
-            print!("\n");
+            print!("\n\n\n");
 
             // Ask for user input
             let mut input = String::new();
@@ -246,19 +246,19 @@ fn main() {
             println!("    Tic Tac Toe\n");
             println!("    Thinking.\n");
             print_board(&board);
-            println!();
+            println!("\n\n");
             sleep(Duration::from_millis(300));
             clear_screen();
             println!("    Tic Tac Toe\n");
             println!("    Thinking..\n");
             print_board(&board);
-            println!();
+            println!("\n\n");
             sleep(Duration::from_millis(200));
             clear_screen();
             println!("    Tic Tac Toe\n");
             println!("    Thinking...\n");
             print_board(&board);
-            println!();
+            println!("\n\n");
             sleep(Duration::from_millis(100));
 
             // Find the best move for the AI 
@@ -272,7 +272,7 @@ fn main() {
             clear_screen();
             println!("\n    Player {} ({}) wins!\n", current_player, if current_player == 1 { "x" } else { "AI" });
             print_board(&board);
-            println!();
+            println!("  A STRANGE GAME.\nTHE ONLY WINNING MOVE IS\n    NOT TO PLAY.");
             break; // Exit game loop when player wins
         }
 
@@ -281,7 +281,7 @@ fn main() {
             clear_screen();
             println!("\n    It's a Draw!\n");
             print_board(&board);
-            println!();
+            println!("  A STRANGE GAME.\nTHE ONLY WINNING MOVE IS\n    NOT TO PLAY.");
             break; // Exit game loop when player wins
         }
 
